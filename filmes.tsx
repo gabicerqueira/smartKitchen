@@ -4,30 +4,29 @@ import { useState } from 'react'
 
 
 const alturaStatusBar = StatusBar.currentHeight;
-const KEY_GPT = '';
+const KEY_GPT = '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';
 
 
-export default function App() {
+export default function Filmes() {
 
   const [load, defLoad] = useState(false);
-  const [receita, defReceita] = useState("");
+  const [filme, defFilme] = useState("");
 
-  const [ingr1, defIngr1] = useState("");
-  const [ingr2, defIngr2] = useState("");
-  const [ingr3, defIngr3] = useState("");
-  const [ingr4, defIngr4] = useState("");
-  const [ocasiao, defOcasiao] = useState("");
+  const [genero, defGenero] = useState("");
+  const [classificacaoEtaria, defClassificacaoEtaria] = useState("");
+  const [tema, defTema] = useState("");
+  const [streaming, defStreaming] = useState("");
 
-  async function gerarReceita() {
-    if (ingr1 === "" || ingr2 === "" || ingr3 === "" || ingr4 === "" || ocasiao === "") {
-      Alert.alert("Atenção", "Informe todos os ingredientes!", [{ text: "Beleza!" }])
+  async function gerarFilme() {
+    if (genero === "" || classificacaoEtaria === "" || tema === "" || streaming === "") {
+      Alert.alert("Atenção", "Informe todos os requisitos!", [{ text: "Beleza!" }])
       return;
     }
-    defReceita("");
+    defFilme("");
     defLoad(true);
     Keyboard.dismiss();
 
-    const prompt = `Sugira uma receita detalhada para o ${ocasiao} usando os ingredientes: ${ingr1}, ${ingr2}, ${ingr3} e ${ingr4} e pesquise a receita no YouTube. Caso encontre, informe o link.`;
+    const prompt = `Sugira uma filme para o ${streaming} usando os requisitos: ${genero}, ${classificacaoEtaria} e ${tema} e pesquise o filme no ${streaming}. Caso encontre, informe o link.`;
 
     fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -52,10 +51,8 @@ export default function App() {
       .then(response => response.json())
       .then((data) => {
         console.log(data.choices[0].message.content);
-        const receitaCompleta = data.choices[0].message.content;
-        const tituloReceita = receitaCompleta.split('\n')[0];
-        console.log(tituloReceita);
-        defReceita(receitaCompleta);
+        const filmeCompleto = data.choices[0].message.content;
+        defFilme(filmeCompleto);
       })   
       .catch((error) => {
         console.log(error);
@@ -69,58 +66,52 @@ export default function App() {
   return (
     <View style={ESTILOS.container}>
       <StatusBar barStyle="dark-content" translucent={true} backgroundColor="#F1F1F1" />
-      <Text style={ESTILOS.header}>Cozinha fácil</Text>
+      <Text style={ESTILOS.header}>Sugestão de filmes</Text>
       <View style={ESTILOS.form}>
-        <Text style={ESTILOS.label}>Insira os ingredientes abaixo:</Text>
+        <Text style={ESTILOS.label}>Insira os requisitos abaixo:</Text>
         <TextInput
-          placeholder="Ingrediente 1"
+          placeholder="Gênero"
           style={ESTILOS.input}
-          value={ingr1}
-          onChangeText={(texto) => defIngr1(texto)}
+          value={genero}
+          onChangeText={(texto) => defGenero(texto)}
         />
         <TextInput
-          placeholder="Ingrediente 2"
+          placeholder="Classificação Etária"
           style={ESTILOS.input}
-          value={ingr2}
-          onChangeText={(texto) => defIngr2(texto)}
+          value={classificacaoEtaria}
+          onChangeText={(texto) => defClassificacaoEtaria(texto)}
         />
         <TextInput
-          placeholder="Ingrediente 3"
+          placeholder="Tema"
           style={ESTILOS.input}
-          value={ingr3}
-          onChangeText={(texto) => defIngr3(texto)}
+          value={tema}
+          onChangeText={(texto) => defTema(texto)}
         />
         <TextInput
-          placeholder="Ingrediente 4"
+          placeholder="Streaming"
           style={ESTILOS.input}
-          value={ingr4}
-          onChangeText={(texto) => defIngr4(texto)}
-        />
-        <TextInput
-          placeholder="Almoço ou Jantar"
-          style={ESTILOS.input}
-          value={ocasiao}
-          onChangeText={(texto) => defOcasiao(texto)}
+          value={streaming}
+          onChangeText={(texto) => defStreaming(texto)}
         />
       </View>
 
-      <TouchableOpacity style={ESTILOS.button} onPress={gerarReceita}>
-        <Text style={ESTILOS.buttonText}>Gerar receita</Text>
+      <TouchableOpacity style={ESTILOS.button} onPress={gerarFilme}>
+        <Text style={ESTILOS.buttonText}>Gerar filme</Text>
         <MaterialIcons name="travel-explore" size={24} color="#FFF" />
       </TouchableOpacity>
 
       <ScrollView contentContainerStyle={{ paddingBottom: 24, marginTop: 4, }} style={ESTILOS.containerScroll} showsVerticalScrollIndicator={false} >
         {load && (
           <View style={ESTILOS.content}>
-            <Text style={ESTILOS.title}>Produzindo receita...</Text>
+            <Text style={ESTILOS.title}>Selecionando filme...</Text>
             <ActivityIndicator color="#000" size="large" />
           </View>
         )}
 
-        {receita && (
+        {filme && (
           <View style={ESTILOS.content}>
-            <Text style={ESTILOS.title}>Sua receita 👇</Text>
-            <Text style={{ lineHeight: 24 }}>{receita} </Text>
+            <Text style={ESTILOS.title}>Seu filme 👇</Text>
+            <Text style={{ lineHeight: 24 }}>{filme} </Text>
           </View>
         )}
       </ScrollView>
