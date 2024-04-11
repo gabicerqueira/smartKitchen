@@ -7,26 +7,26 @@ const alturaStatusBar = StatusBar.currentHeight;
 const KEY_GPT = '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';
 
 
-export default function FilmesScreen() {
+export default function PlaylistScreen() {
 
   const [load, defLoad] = useState(false);
-  const [filme, defFilme] = useState("");
+  const [playlist, defPlaylist] = useState("");
 
   const [genero, defGenero] = useState("");
-  const [classificacaoEtaria, defClassificacaoEtaria] = useState("");
-  const [tema, defTema] = useState("");
-  const [streaming, defStreaming] = useState("");
+  const [artista1, defArtista1] = useState("");
+  const [artista2, defArtista2] = useState("");
+  const [atmosfera, defAtmosfera] = useState("");
 
-  async function gerarFilme() {
-    if (genero === "" || classificacaoEtaria === "" || tema === "" || streaming === "") {
+  async function gerarPlaylist() {
+    if (genero === "" || artista1 === "" || artista2 === "" || atmosfera === "") {
       Alert.alert("Atenção", "Informe todos os requisitos!", [{ text: "Beleza!" }])
       return;
     }
-    defFilme("");
+    defPlaylist("");
     defLoad(true);
     Keyboard.dismiss();
 
-    const prompt = `Sugira uma filme para o ${streaming} usando os requisitos: ${genero}, ${classificacaoEtaria} e ${tema} e pesquise o filme no ${streaming}. Caso encontre, informe o link.`;
+    const prompt = `Sugira uma playlist personalizada para o ${atmosfera} da música: animada, relaxante, triste e usando os requisitos: ${genero}, ${artista1} e ${artista2} e pesquise a playlist no Spotify. Caso encontre, informe o link.`;
 
     fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -51,8 +51,8 @@ export default function FilmesScreen() {
       .then(response => response.json())
       .then((data) => {
         console.log(data.choices[0].message.content);
-        const filmeCompleto = data.choices[0].message.content;
-        defFilme(filmeCompleto);
+        const playlistCompleto = data.choices[0].message.content;
+        defPlaylist(playlistCompleto);
       })   
       .catch((error) => {
         console.log(error);
@@ -66,7 +66,7 @@ export default function FilmesScreen() {
   return (
     <View style={ESTILOS.container}>
       <StatusBar barStyle="dark-content" translucent={true} backgroundColor="#F1F1F1" />
-      <Text style={ESTILOS.header}>Sugestão de filmes</Text>
+      <Text style={ESTILOS.header}>Playlist Personalizada</Text>
       <View style={ESTILOS.form}>
         <Text style={ESTILOS.label}>Insira os requisitos abaixo:</Text>
         <TextInput
@@ -76,27 +76,27 @@ export default function FilmesScreen() {
           onChangeText={(texto) => defGenero(texto)}
         />
         <TextInput
-          placeholder="Classificação Etária"
+          placeholder="Atmosfera: animada, relaxante, triste..."
           style={ESTILOS.input}
-          value={classificacaoEtaria}
-          onChangeText={(texto) => defClassificacaoEtaria(texto)}
+          value={atmosfera}
+          onChangeText={(texto) => defAtmosfera(texto)}
         />
         <TextInput
-          placeholder="Tema"
+          placeholder="Artista 1"
           style={ESTILOS.input}
-          value={tema}
-          onChangeText={(texto) => defTema(texto)}
+          value={artista1}
+          onChangeText={(texto) => defArtista1(texto)}
         />
         <TextInput
-          placeholder="Streaming"
+          placeholder="Artista 2"
           style={ESTILOS.input}
-          value={streaming}
-          onChangeText={(texto) => defStreaming(texto)}
+          value={artista2}
+          onChangeText={(texto) => defArtista2(texto)}
         />
       </View>
 
-      <TouchableOpacity style={ESTILOS.button} onPress={gerarFilme}>
-        <Text style={ESTILOS.buttonText}>Gerar filme</Text>
+      <TouchableOpacity style={ESTILOS.button} onPress={gerarPlaylist}>
+        <Text style={ESTILOS.buttonText}>Gerar playlist</Text>
         <MaterialIcons name="travel-explore" size={24} color="#FFF" />
       </TouchableOpacity>
 
@@ -108,10 +108,10 @@ export default function FilmesScreen() {
           </View>
         )}
 
-        {filme && (
+        {playlist && (
           <View style={ESTILOS.content}>
-            <Text style={ESTILOS.title}>Seu filme 👇</Text>
-            <Text style={{ lineHeight: 24 }}>{filme} </Text>
+            <Text style={ESTILOS.title}>Sua playlist 👇</Text>
+            <Text style={{ lineHeight: 24 }}>{playlist} </Text>
           </View>
         )}
       </ScrollView>

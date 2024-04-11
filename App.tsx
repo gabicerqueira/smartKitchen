@@ -1,13 +1,65 @@
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Platform, StatusBar, ScrollView, ActivityIndicator, Alert, Keyboard } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Platform, StatusBar, ScrollView, ActivityIndicator, Alert, Keyboard} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useState } from 'react'
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import { useState } from 'react';
+import FilmesScreen from './filmes';
+import TreinoScreen from './treino';
+import PlaylistScreen from './playlist';
+import { NavigationContainer } from '@react-navigation/native';
+
+const Tab = createMaterialBottomTabNavigator();
 
 
 const alturaStatusBar = StatusBar.currentHeight;
-const KEY_GPT = '';
-
+const KEY_GPT = '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';
 
 export default function App() {
+  return (
+    <NavigationContainer>
+      <Tab.Navigator>
+        <Tab.Screen 
+          name="Receita" 
+          component={AppScreen} 
+          options={{
+            tabBarIcon: ({ color }) => (
+              <MaterialIcons name="restaurant" size={24} color="black" />
+            )
+          }} 
+        />
+        <Tab.Screen 
+          name="Filmes" 
+          component={FilmesScreen} 
+          options={{
+            tabBarIcon: ({ color }) => (
+              <MaterialIcons name="movie" color={color} size={24} />
+            )
+          }} 
+        />
+        <Tab.Screen 
+          name="Treino" 
+          component={TreinoScreen} 
+          options={{
+            tabBarIcon: ({ color }) => (
+              <MaterialIcons name="fitness-center" color={color} size={24} />
+            )
+          }} 
+        />
+        <Tab.Screen 
+          name="Playlist" 
+          component={PlaylistScreen} 
+          options={{
+            tabBarIcon: ({ color }) => (
+              <MaterialIcons name="music-note" size={24} color="black" />
+            )
+          }} 
+        />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+}
+
+
+function AppScreen() {
 
   const [load, defLoad] = useState(false);
   const [receita, defReceita] = useState("");

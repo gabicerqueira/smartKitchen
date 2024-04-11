@@ -7,26 +7,26 @@ const alturaStatusBar = StatusBar.currentHeight;
 const KEY_GPT = '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';
 
 
-export default function FilmesScreen() {
+export default function TreinoScreen() {
 
   const [load, defLoad] = useState(false);
-  const [filme, defFilme] = useState("");
+  const [treino, defTreino] = useState("");
 
   const [genero, defGenero] = useState("");
-  const [classificacaoEtaria, defClassificacaoEtaria] = useState("");
-  const [tema, defTema] = useState("");
-  const [streaming, defStreaming] = useState("");
+  const [nivel, defNivel] = useState("");
+  const [objetivo, defObjetivo] = useState("");
+  const [peso, defPeso] = useState("");
 
-  async function gerarFilme() {
-    if (genero === "" || classificacaoEtaria === "" || tema === "" || streaming === "") {
+  async function gerarTreino() {
+    if (genero === "" || nivel === "" || objetivo === "" || peso === "") {
       Alert.alert("Atenção", "Informe todos os requisitos!", [{ text: "Beleza!" }])
       return;
     }
-    defFilme("");
+    defTreino("");
     defLoad(true);
     Keyboard.dismiss();
 
-    const prompt = `Sugira uma filme para o ${streaming} usando os requisitos: ${genero}, ${classificacaoEtaria} e ${tema} e pesquise o filme no ${streaming}. Caso encontre, informe o link.`;
+    const prompt = `Sugira um treino personalizado para o ${nivel} da pessoa: iniciante, intermediário ou avançado e usando os requisitos: ${genero}, ${objetivo} e ${peso} e pesquise o treino no Youtube. Caso encontre, informe o link.`;
 
     fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -51,8 +51,8 @@ export default function FilmesScreen() {
       .then(response => response.json())
       .then((data) => {
         console.log(data.choices[0].message.content);
-        const filmeCompleto = data.choices[0].message.content;
-        defFilme(filmeCompleto);
+        const treinoCompleto = data.choices[0].message.content;
+        defTreino(treinoCompleto);
       })   
       .catch((error) => {
         console.log(error);
@@ -66,7 +66,7 @@ export default function FilmesScreen() {
   return (
     <View style={ESTILOS.container}>
       <StatusBar barStyle="dark-content" translucent={true} backgroundColor="#F1F1F1" />
-      <Text style={ESTILOS.header}>Sugestão de filmes</Text>
+      <Text style={ESTILOS.header}>Treino Personalizado</Text>
       <View style={ESTILOS.form}>
         <Text style={ESTILOS.label}>Insira os requisitos abaixo:</Text>
         <TextInput
@@ -76,27 +76,27 @@ export default function FilmesScreen() {
           onChangeText={(texto) => defGenero(texto)}
         />
         <TextInput
-          placeholder="Classificação Etária"
+          placeholder="Nível: Iniciante, Intermediário e Avançado"
           style={ESTILOS.input}
-          value={classificacaoEtaria}
-          onChangeText={(texto) => defClassificacaoEtaria(texto)}
+          value={nivel}
+          onChangeText={(texto) => defNivel(texto)}
         />
         <TextInput
-          placeholder="Tema"
+          placeholder="Objetivo"
           style={ESTILOS.input}
-          value={tema}
-          onChangeText={(texto) => defTema(texto)}
+          value={objetivo}
+          onChangeText={(texto) => defObjetivo(texto)}
         />
         <TextInput
-          placeholder="Streaming"
+          placeholder="Peso"
           style={ESTILOS.input}
-          value={streaming}
-          onChangeText={(texto) => defStreaming(texto)}
+          value={peso}
+          onChangeText={(texto) => defPeso(texto)}
         />
       </View>
 
-      <TouchableOpacity style={ESTILOS.button} onPress={gerarFilme}>
-        <Text style={ESTILOS.buttonText}>Gerar filme</Text>
+      <TouchableOpacity style={ESTILOS.button} onPress={gerarTreino}>
+        <Text style={ESTILOS.buttonText}>Gerar treino</Text>
         <MaterialIcons name="travel-explore" size={24} color="#FFF" />
       </TouchableOpacity>
 
@@ -108,10 +108,10 @@ export default function FilmesScreen() {
           </View>
         )}
 
-        {filme && (
+        {treino && (
           <View style={ESTILOS.content}>
-            <Text style={ESTILOS.title}>Seu filme 👇</Text>
-            <Text style={{ lineHeight: 24 }}>{filme} </Text>
+            <Text style={ESTILOS.title}>Seu treino 👇</Text>
+            <Text style={{ lineHeight: 24 }}>{treino} </Text>
           </View>
         )}
       </ScrollView>
